@@ -2,7 +2,8 @@
 
 from collections import UserDict
 from datetime import datetime, timedelta
-import re
+
+from validators import is_valid_birthday, is_valid_email, is_valid_phone
 
 
 class Field:
@@ -19,17 +20,17 @@ class Name(Field):
     """Contact name field."""
 
     def __init__(self, value):
-        if not value:
+        if not value or not value.strip():
             raise ValueError("Name cannot be empty.")
-        super().__init__(value)
+        super().__init__(value.strip())
 
 
 class Phone(Field):
     """Contact phone field."""
 
     def __init__(self, value):
-        if not value.isdigit() or len(value) != 10:
-            raise ValueError("Phone number must contain exactly 10 digits.")
+        if not is_valid_phone(value):
+            raise ValueError("Invalid phone number.")
         super().__init__(value)
 
 
@@ -37,8 +38,7 @@ class Email(Field):
     """Contact email field."""
 
     def __init__(self, value):
-        pattern = r"^[\w\.-]+@[\w\.-]+\.\w{2,}$"
-        if not re.fullmatch(pattern, value):
+        if not is_valid_email(value):
             raise ValueError("Invalid email format.")
         super().__init__(value)
 
@@ -46,15 +46,19 @@ class Email(Field):
 class Address(Field):
     """Contact address field."""
 
+    def __init__(self, value):
+        if not value or not value.strip():
+            raise ValueError("Address cannot be empty.")
+        super().__init__(value.strip())
+
 
 class Birthday(Field):
     """Contact birthday field."""
 
     def __init__(self, value):
-        try:
-            self.value = datetime.strptime(value, "%d.%m.%Y").date()
-        except ValueError as error:
-            raise ValueError("Invalid date format. Use DD.MM.YYYY") from error
+        if not is_valid_birthday(value):
+            raise ValueError("Invalid date format. Use DD.MM.YYYY")
+        self.value = datetime.strptime(value, "%d.%m.%Y").date()
 
 
 class Record:
