@@ -9,3 +9,4 @@ def input_error(func):
         except IndexError:
             return "Please provide a name."
     return inner
+#test
