@@ -1,11 +1,21 @@
 from commands import (
+    add_address,
     add_birthday,
     add_contact,
+    add_email,
+    add_note,
     birthdays,
     change_contact,
+    delete_contact,
+    delete_note,
+    edit_note,
+    search_contacts,
+    search_notes,
     show_all,
     show_birthday,
+    show_notes,
     show_phone,
+    sort_notes,
 )
 from storage import load_data, save_data
 
@@ -17,7 +27,7 @@ def parse_input(user_input):
 
 
 def main():
-    book = load_data()
+    book, notebook = load_data()
     print("Welcome to the assistant bot!")
 
     while True:
@@ -27,11 +37,13 @@ def main():
         command, *args = parse_input(user_input)
 
         if command in ["close", "exit"]:
-            save_data(book)
+            print(save_data(book, notebook))
             print("Good bye!")
             break
         elif command == "hello":
             print("How can I help you?")
+
+        # Contact commands
         elif command == "add":
             print(add_contact(args, book))
         elif command == "change":
@@ -45,7 +57,30 @@ def main():
         elif command == "show-birthday":
             print(show_birthday(args, book))
         elif command == "birthdays":
-            print(birthdays(book))
+            print(birthdays(args, book))
+        elif command == "add-email":
+            print(add_email(args, book))
+        elif command == "add-address":
+            print(add_address(args, book))
+        elif command == "search":
+            print(search_contacts(args, book))
+        elif command == "delete":
+            print(delete_contact(args, book))
+
+        # Note commands
+        elif command == "add-note":
+            print(add_note(args, notebook))
+        elif command == "notes":
+            print(show_notes(notebook))
+        elif command == "search-notes":
+            print(search_notes(args, notebook))
+        elif command == "delete-note":
+            print(delete_note(args, notebook))
+        elif command == "edit-note":
+            print(edit_note(args, notebook))
+        elif command == "sort-notes":
+            print(sort_notes(notebook))
+
         else:
             print("Invalid command.")
 
