@@ -44,6 +44,7 @@ COMMANDS = [
     "delete-note",
     "edit-note",
     "sort-notes",
+    "show-all-notes",
 ]
 
 
@@ -124,7 +125,8 @@ def main():
             print(edit_note(args, notebook))
         elif command == "sort-notes":
             print(sort_notes(notebook))
-
+        elif command == "show-all-notes":
+            print(sort_notes(notebook))
         else:
             print("Invalid command.")
 

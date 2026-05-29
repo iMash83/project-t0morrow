@@ -226,7 +226,7 @@ Notes:
   search-notes <query>                     - Search notes by text or tags
   delete-note <text>                       - Delete a note by its text
   edit-note <old> -> <new> [#tags]         - Edit a note's text and/or tags
-  sort-notes                               - Sort notes alphabetically by tags
+  sort-notes / show-all-notes              - Sort notes alphabetically by tags
 
 System:
   hello                                    - Greet the bot
