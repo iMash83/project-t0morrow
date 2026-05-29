@@ -64,5 +64,9 @@ class Notebook:
     def sort_notes_by_tags(self) -> list[Note]:
         return sorted(
             self.notes,
-            key=lambda note: (not note.tags, sorted(note.tags) if note.tags else [])
+            key=lambda note: (
+                not note.tags,
+                sorted(note.tags) if note.tags else [],
+                note.text.lower()
+            )
         )
