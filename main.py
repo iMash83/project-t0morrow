@@ -1,3 +1,5 @@
+import difflib
+
 from commands import (
     add_address,
     add_birthday,
@@ -19,6 +21,29 @@ from commands import (
 )
 from storage import load_data, save_data
 
+COMMANDS = [
+    "close",
+    "exit",
+    "hello",
+    "add",
+    "change",
+    "phone",
+    "all",
+    "add-birthday",
+    "show-birthday",
+    "birthdays",
+    "add-email",
+    "add-address",
+    "search",
+    "delete",
+    "add-note",
+    "notes",
+    "search-notes",
+    "delete-note",
+    "edit-note",
+    "sort-notes",
+]
+
 
 def parse_input(user_input):
     cmd, *args = user_input.split()
@@ -36,12 +61,26 @@ def main():
             continue
         command, *args = parse_input(user_input)
 
+        if command not in COMMANDS:
+            matches = difflib.get_close_matches(command, COMMANDS, n=1, cutoff=0.6)
+            if matches:
+                confirm = input(f"Did you mean '{matches[0]}'? (y/n): ").strip().lower()
+                if confirm in ("y", "yes"):
+                    command = matches[0]
+                else:
+                    print("Invalid command.")
+                    continue
+            else:
+                print("Invalid command.")
+                continue
+
         if command in ["close", "exit"]:
             print(save_data(book, notebook))
             print("Good bye!")
             break
         elif command == "hello":
             print("How can I help you?")
+
 
         # Contact commands
         elif command == "add":
