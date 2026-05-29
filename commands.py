@@ -8,7 +8,7 @@ from validators import input_error
 @input_error
 def add_contact(args, book):
     if len(args) < 2:
-        raise ValueError
+        raise ValueError("Please provide both name and phone.")
 
     *name_parts, phone = args
     name = " ".join(name_parts)
@@ -27,11 +27,13 @@ def add_contact(args, book):
 
 @input_error
 def change_contact(args, book):
+    if len(args) < 3:
+        raise ValueError("Please provide name, old phone and new phone.")
     *name_parts, old_phone, new_phone = args
     name = " ".join(name_parts)
 
     if not name:
-        raise ValueError
+        raise ValueError("Please provide name, old phone and new phone.")
 
     record = book.find(name)
     if not record:
@@ -44,6 +46,8 @@ def change_contact(args, book):
 @input_error
 def show_phone(args, book):
     name = " ".join(args)
+    if not name:
+        raise ValueError("Please provide a contact name.")
     record = book.find(name)
     if not record:
         raise KeyError
@@ -60,6 +64,8 @@ def show_all(book):
 
 @input_error
 def add_birthday(args, book):
+    if len(args) < 2:
+        raise ValueError("Please provide name and birthday (DD.MM.YYYY).")
     *name_parts, birthday = args
     name = " ".join(name_parts)
     record = book.find(name)
@@ -72,6 +78,8 @@ def add_birthday(args, book):
 @input_error
 def show_birthday(args, book):
     name = " ".join(args)
+    if not name:
+        raise ValueError("Please provide a contact name.")
     record = book.find(name)
     if not record:
         raise KeyError
@@ -82,7 +90,13 @@ def show_birthday(args, book):
 
 @input_error
 def birthdays(args, book):
-    days = int(args[0]) if args else 7
+    if args:
+        try:
+            days = int(args[0])
+        except ValueError:
+            raise ValueError("Please provide a valid number of days.")
+    else:
+        days = 7
     upcoming = book.get_upcoming_birthdays(days)
     if not upcoming:
         return f"No birthdays in the next {days} days."
@@ -91,6 +105,8 @@ def birthdays(args, book):
 
 @input_error
 def add_email(args, book):
+    if len(args) < 2:
+        raise ValueError("Please provide name and email.")
     *name_parts, email = args
     name = " ".join(name_parts)
     record = book.find(name)
@@ -103,7 +119,7 @@ def add_email(args, book):
 @input_error
 def add_address(args, book):
     if len(args) < 2:
-        raise IndexError
+        raise ValueError("Please provide name and address.")
     name, *address_parts = args
     address = " ".join(address_parts)
     record = book.find(name)
@@ -117,7 +133,7 @@ def add_address(args, book):
 def search_contacts(args, book):
     query = " ".join(args)
     if not query:
-        raise IndexError
+        raise ValueError("Please provide a search query.")
     results = book.search(query)
     if not results:
         return f"No contacts match '{query}'."
@@ -128,7 +144,7 @@ def search_contacts(args, book):
 def delete_contact(args, book):
     name = " ".join(args)
     if not name:
-        raise IndexError
+        raise ValueError("Please provide a contact name to delete.")
     book.delete(name)
     return f"Contact '{name}' deleted."
 
@@ -149,10 +165,10 @@ def _split_text_and_tags(tokens):
 @input_error
 def add_note(args, notebook):
     if not args:
-        raise IndexError
+        raise ValueError("Please provide note text. Format: add-note <text> [#tag1 #tag2 ...]")
     text, tags = _split_text_and_tags(args)
     if not text:
-        raise ValueError
+        raise ValueError("Please provide note text. Format: add-note <text> [#tag1 #tag2 ...]")
     return notebook.add_note(Note(text, tags))
 
 
@@ -168,7 +184,7 @@ def show_notes(notebook):
 def search_notes(args, notebook):
     query = " ".join(args)
     if not query:
-        raise IndexError
+        raise ValueError("Please provide a search query. Format: search-notes <query>")
     results = notebook.search_notes(query)
     if not results:
         return f"No notes match '{query}'."
@@ -179,7 +195,7 @@ def search_notes(args, notebook):
 def delete_note(args, notebook):
     text = " ".join(args)
     if not text:
-        raise IndexError
+        raise ValueError("Please provide note text to delete. Format: delete-note <text>")
     return notebook.delete_note(text)
 
 
@@ -187,12 +203,12 @@ def delete_note(args, notebook):
 def edit_note(args, notebook):
     # Syntax: edit-note <old text> -> <new text> [#tag1 #tag2 ...]
     if "->" not in args:
-        raise ValueError
+        raise ValueError("Invalid format. Use: edit-note <old text> -> <new text> [#tag1 ...]")
     sep = args.index("->")
     old_text = " ".join(args[:sep])
     new_text, new_tags = _split_text_and_tags(args[sep + 1:])
     if not old_text or (not new_text and not new_tags):
-        raise ValueError
+        raise ValueError("Invalid format. Use: edit-note <old text> -> <new text> [#tag1 ...]")
     return notebook.edit_note(old_text, new_text or None, new_tags or None)
 
 
