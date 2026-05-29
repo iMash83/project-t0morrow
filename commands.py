@@ -220,6 +220,39 @@ def sort_notes(notebook):
     return "\n".join(str(n) for n in sorted_notes)
 
 
+@input_error
+def add_tag(args, notebook):
+    if not args:
+        raise ValueError("Please provide note text and tag(s). Format: add-tag <text> #tag1 [#tag2 ...]")
+    text, tags = _split_text_and_tags(args)
+    if not text or not tags:
+        raise ValueError("Please provide note text and tag(s). Format: add-tag <text> #tag1 [#tag2 ...]")
+    return notebook.add_tags_to_note(text, tags)
+
+
+@input_error
+def delete_tag(args, notebook):
+    if not args:
+        raise ValueError("Please provide note text and tag. Format: delete-tag <text> #tag")
+    text, tags = _split_text_and_tags(args)
+    if not text or len(tags) != 1:
+        raise ValueError("Please provide note text and exactly one tag. Format: delete-tag <text> #tag")
+    return notebook.remove_tag_from_note(text, tags[0])
+
+
+@input_error
+def edit_tag(args, notebook):
+    # Syntax: edit-tag <text> #old -> #new
+    if "->" not in args:
+        raise ValueError("Invalid format. Use: edit-tag <text> #old -> #new")
+    sep = args.index("->")
+    left_text, left_tags = _split_text_and_tags(args[:sep])
+    right_text, right_tags = _split_text_and_tags(args[sep + 1:])
+    if not left_text or len(left_tags) != 1 or len(right_tags) != 1 or right_text.strip():
+        raise ValueError("Invalid format. Use: edit-tag <text> #old -> #new")
+    return notebook.edit_tag_in_note(left_text, left_tags[0], right_tags[0])
+
+
 def show_help():
     return """Available commands:
 
@@ -243,6 +276,9 @@ Notes:
   delete-note <text>                       - Delete a note by its text
   edit-note <old> -> <new> [#tags]         - Edit a note's text and/or tags
   sort-notes / show-all-notes              - Sort notes alphabetically by tags
+  add-tag <text> #tag1 [#tag2 ...]          - Add tag(s) to an existing note
+  delete-tag <text> #tag                    - Remove a tag from an existing note
+  edit-tag <text> #old -> #new              - Change a tag of an existing note
 
 System:
   hello                                    - Greet the bot

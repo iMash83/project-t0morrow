@@ -19,6 +19,9 @@ from commands import (
     show_phone,
     sort_notes,
     show_help,
+    add_tag,
+    delete_tag,
+    edit_tag,
 )
 from storage import load_data, save_data
 
@@ -45,6 +48,9 @@ COMMANDS = [
     "edit-note",
     "sort-notes",
     "show-all-notes",
+    "add-tag",
+    "delete-tag",
+    "edit-tag",
 ]
 
 
@@ -127,6 +133,12 @@ def main():
             print(sort_notes(notebook))
         elif command == "show-all-notes":
             print(sort_notes(notebook))
+        elif command == "add-tag":
+            print(add_tag(args, notebook))
+        elif command == "delete-tag":
+            print(delete_tag(args, notebook))
+        elif command == "edit-tag":
+            print(edit_tag(args, notebook))
         else:
             print("Invalid command.")
 
