@@ -18,6 +18,7 @@ from commands import (
     show_notes,
     show_phone,
     sort_notes,
+    show_help,
 )
 from storage import load_data, save_data
 
@@ -25,6 +26,7 @@ COMMANDS = [
     "close",
     "exit",
     "hello",
+    "help",
     "add",
     "change",
     "phone",
@@ -53,7 +55,7 @@ def parse_input(user_input):
 
 def main():
     book, notebook = load_data()
-    print("Welcome to the assistant bot!")
+    print("Welcome to the assistant bot! Type 'help' to see all available commands.")
 
     while True:
         user_input = input("Enter a command: ")
@@ -80,6 +82,9 @@ def main():
             break
         elif command == "hello":
             print("How can I help you?")
+        elif command == "help":
+            print(show_help())
+
 
 
         # Contact commands

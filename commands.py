@@ -202,3 +202,34 @@ def sort_notes(notebook):
     if not sorted_notes:
         return "No notes saved yet."
     return "\n".join(str(n) for n in sorted_notes)
+
+
+def show_help():
+    return """Available commands:
+
+Contacts:
+  add <name> <phone>                       - Add or update contact's phone
+  change <name> <old_phone> <new_phone>   - Change an existing phone number
+  phone <name>                             - Show all phone numbers for a contact
+  all                                      - Show all saved contacts
+  add-birthday <name> <DD.MM.YYYY>        - Add a birthday for a contact
+  show-birthday <name>                     - Show the birthday of a contact
+  birthdays [days]                         - Show upcoming birthdays (default: 7 days)
+  add-email <name> <email>                 - Add or update contact's email
+  add-address <name> <address>             - Add or update contact's physical address
+  search <query>                           - Search contacts by any field
+  delete <name>                            - Delete a contact
+
+Notes:
+  add-note <text> [#tag1 #tag2 ...]        - Add a note (prefix tags with '#')
+  notes                                    - Show all notes
+  search-notes <query>                     - Search notes by text or tags
+  delete-note <text>                       - Delete a note by its text
+  edit-note <old> -> <new> [#tags]         - Edit a note's text and/or tags
+  sort-notes                               - Sort notes alphabetically by tags
+
+System:
+  hello                                    - Greet the bot
+  help                                     - Show this help menu
+  close / exit                             - Save data and exit assistant"""
+
